@@ -110,7 +110,7 @@ class PerfilADO
     {
         dbConn.Open();
 
-        string sql = @"DELETE FROM Songs WHERE Id = @Id";
+        string sql = @"DELETE FROM Perfils WHERE Id = @Id";
 
         using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
         cmd.Parameters.AddWithValue("@Id", Id);

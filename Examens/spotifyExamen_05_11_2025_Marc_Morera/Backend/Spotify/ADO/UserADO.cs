@@ -10,7 +10,8 @@ public class UserADO
 
     public static void Insert(DatabaseConnection dbConn, User user)
 {
-    PasswordEncryption.ConvertPassword(user);
+        PasswordEncryption.ConvertPassword(user);
+    
     dbConn.Open();
     string sql = @"INSERT INTO Users (Id, Name, Password, Salt)
                    VALUES (@Id, @Name, @Password, @Salt)";

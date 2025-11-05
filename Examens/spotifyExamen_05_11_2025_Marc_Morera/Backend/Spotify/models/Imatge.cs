@@ -1,6 +1,6 @@
 namespace Spotify.Model;
 
-public class Image
+public class Imatge
 {
     public Guid Id { get; set; }
     
