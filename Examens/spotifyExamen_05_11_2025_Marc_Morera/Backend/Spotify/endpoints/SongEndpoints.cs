@@ -43,6 +43,9 @@ public static class SongEndpoints
         
         app.MapDelete("/Songs/{id}", (Guid Id) => SongADO.Delete(dbConn, Id) ? Results.NoContent() : Results.NotFound());
 
+
+
+
         app.MapPost("/Song/{id}/upload", async (Guid id, IFormFileCollection images) =>
         {
             if (images == null || images.Count == 0)
