@@ -43,6 +43,7 @@ public static class PerfilEndpoints
             return Results.Created($"/perfil/{perfil.Id}", perfil);
         });
 
+        //Update
         app.MapPut("/perfil/{id}", (Guid id, PerfilRequest req) =>
         {
             var existing = PerfilADO.GetById(dbConn, id);
@@ -54,7 +55,7 @@ public static class PerfilEndpoints
 
             Perfil updated = new Perfil
             {
-                Id = id,
+                
                 Name = req.Name,
                 Descripcio = req.Descripcio,
                 Estat = req.Estat,
@@ -66,7 +67,7 @@ public static class PerfilEndpoints
             return Results.Ok(updated);
         });
 
-        // DELETE /playlists/{id}
+        // DELETE /perfil/{id}
         app.MapDelete("/perfil/{id}", (Guid id) => PerfilADO.Delete(dbConn, id) ? Results.NoContent() : Results.NotFound());
 
 

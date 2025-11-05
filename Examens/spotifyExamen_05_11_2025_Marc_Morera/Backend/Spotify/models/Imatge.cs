@@ -6,6 +6,6 @@ public class Imatge
     
     public Guid Song_Id { get; set; }
     public string Url { get; set; } = "";
-    public string ImagePath { get; set; } = "";
+    public string Hash { get; set; } = "";
     
 }
