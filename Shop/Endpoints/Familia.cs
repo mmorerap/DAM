@@ -2,6 +2,8 @@ using dbdemo.Repository;
 using dbdemo.Services;
 using dbdemo.Model;
 using dbdemo.DTO;
+using dbdemo.Common;
+using dbdemo.Validators;
 // using dbdemo.Validators;
 // using dbdemo.Common;
 
@@ -42,6 +44,7 @@ public static class EndpointsFamilia
         // POST /familia
         app.MapPost("/familia", (FamiliaRequest req) =>
         {
+            Result result = FamiliaValidator.Validate(req);
             Familia familia = new Familia
             {
                 Id = Guid.NewGuid(),
@@ -58,5 +61,5 @@ public static class EndpointsFamilia
 
 }
 
-public record FamiliaRequest(string Nom, string Descripcio);  // Com ha de llegir el POST
+// public record FamiliaRequest(string Nom, string Descripcio);  // Com ha de llegir el POST
 

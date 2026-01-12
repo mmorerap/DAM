@@ -1,7 +1,7 @@
 using dbdemo.Repository;
 using dbdemo.Services;
 using dbdemo.Model;
-
+using dbdemo.DTO;
 namespace dbdemo.Endpoints;
 
 public static class EndpointsCarritoCompras
@@ -43,6 +43,15 @@ public static class EndpointsCarritoCompras
 
             return Results.Created($"/CarritoCompra/{carritoCompra.Id}", carritoCompra);
         });
+
+
+        //UPTATE
+
+        //IMPORT aplicar descomptes utilitzan querry string FACTORY
+
+
+
+
     }
 
 
