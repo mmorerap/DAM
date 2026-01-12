@@ -28,7 +28,8 @@ class ProductADO
         cmd.Parameters.AddWithValue("@IdFamilia", product.IdFamilia);
         cmd.Parameters.AddWithValue("@Name", product.Name);
 
-    
+        cmd.ExecuteNonQuery();
+
         dbConn.Close();
     }
 

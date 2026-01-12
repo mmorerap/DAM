@@ -23,6 +23,8 @@ class CarritoComprasADO
         cmd.Parameters.AddWithValue("@Nom", carritoCompras.Nom);
         cmd.Parameters.AddWithValue("@Descripcio", carritoCompras.Descripcio);
         
+        cmd.ExecuteNonQuery();
+        
         dbConn.Close();
     }
 

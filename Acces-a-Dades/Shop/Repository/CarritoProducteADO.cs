@@ -24,6 +24,8 @@ class CarritoProducteADO
         cmd.Parameters.AddWithValue("@ID_PROD", carritoProducte.ID_PROD);
         cmd.Parameters.AddWithValue("@Quantitat", carritoProducte.Quantitat);
 
+        cmd.ExecuteNonQuery();
+
         dbConn.Close();
     }
 

@@ -23,6 +23,8 @@ class FamiliaADO
         cmd.Parameters.AddWithValue("@Nom", familia.Nom);
         cmd.Parameters.AddWithValue("@Descripcio", familia.Descripcio);
 
+        cmd.ExecuteNonQuery();
+
         dbConn.Close();
     }
 
