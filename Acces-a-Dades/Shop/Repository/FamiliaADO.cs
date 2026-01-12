@@ -9,7 +9,7 @@ namespace dbdemo.Repository;
 class FamiliaADO
 {
    
-
+    //POST
     public static void Insert(DatabaseConnection dbConn,Familia familia)
     {
 
@@ -23,8 +23,6 @@ class FamiliaADO
         cmd.Parameters.AddWithValue("@Nom", familia.Nom);
         cmd.Parameters.AddWithValue("@Descripcio", familia.Descripcio);
 
-        int rows = cmd.ExecuteNonQuery();
-        Console.WriteLine($"{rows} fila inserida.");
         dbConn.Close();
     }
 
@@ -75,5 +73,43 @@ class FamiliaADO
 
         dbConn.Close();
         return familia;
+    }
+
+
+     public static void Update(DatabaseConnection dbConn, Familia familia)
+    {
+        dbConn.Open();
+
+        string sql = @"UPDATE Familia 
+                        SET
+                        Id = @Id,
+                        Nom = @Nom,
+                        Descripcio = @Descripcio
+                        WHERE Id = @Id";
+                        
+
+
+        using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
+        cmd.Parameters.AddWithValue("@Id", familia.Id);
+        cmd.Parameters.AddWithValue("@Nom", familia.Nom);
+        cmd.Parameters.AddWithValue("@Descripcio", familia.Descripcio);
+
+    
+        dbConn.Close();
+    }
+    public static bool Delete(DatabaseConnection dbConn, Guid Id)
+    {
+        dbConn.Open();
+
+        string sql = @"DELETE FROM Familia WHERE Id = @Id";
+
+        using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
+        cmd.Parameters.AddWithValue("@Id", Id);
+
+        int rows = cmd.ExecuteNonQuery();
+
+        dbConn.Close();
+
+        return rows > 0;
     }
 }
