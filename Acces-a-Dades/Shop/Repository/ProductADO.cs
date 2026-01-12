@@ -27,8 +27,7 @@ class ProductADO
         cmd.Parameters.AddWithValue("@IdFamilia", product.IdFamilia);
         cmd.Parameters.AddWithValue("@Name", product.Name);
 
-        int rows = cmd.ExecuteNonQuery();
-        Console.WriteLine($"{rows} fila inserida.");
+    
         dbConn.Close();
     }
 
