@@ -30,8 +30,8 @@ public static class EndpointsProduct
 
 
 
-        // POST /products
-        app.MapPost("/products", (ProductRequest req) =>
+        // POST /product
+        app.MapPost("/product", (ProductRequest req) =>
         {
             Product product = new Product
             {
@@ -48,6 +48,35 @@ public static class EndpointsProduct
 
             return Results.Created($"/products/{product.Id}", product);
         });
+
+        // UPDATE /product/{id}
+        app.MapPut("/product/{id}", (Guid id, ProductRequest req) =>
+        {
+            var existing = ProductADO.GetById(dbConn, id);
+
+            if (existing == null)
+            {
+                return Results.NotFound();
+            }
+
+            Product updated = new Product
+            {
+                Id = id,
+                Code = req.Code,
+                Descripcio = req.Descripcio,
+                Price = req.Price,
+                Descompte = req.Descompte,
+                IdFamilia = req.IdFamilia,
+                Name = req.Name
+            };
+
+            ProductADO.Update(dbConn, updated);
+
+            return Results.Ok(updated);
+        });
+
+        // DELETE /product/{id}
+        app.MapDelete("/product/{id}", (Guid id) => ProductADO.Delete(dbConn, id) ? Results.NoContent() : Results.NotFound());
     }
 
 
