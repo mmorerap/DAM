@@ -89,4 +89,52 @@ class ProductADO
         dbConn.Close();
         return product;
     }
+
+     public static void Update(DatabaseConnection dbConn, Product product)
+    {
+        dbConn.Open();
+
+        string sql = @"UPDATE Product 
+                        SET
+                        Id = @Id,
+                        Code = @Code,
+                        Descripcio = @Descripcio,
+                        Price = @Price,
+                        Descompte = @Descompte,
+                        IdFamilia = @IdFamilia,
+                        Name = @Name
+                        WHERE Id = @Id";
+
+
+        using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
+        cmd.Parameters.AddWithValue("@Id", product.Id);
+        cmd.Parameters.AddWithValue("@Code", product.Code);
+        cmd.Parameters.AddWithValue("@Descripcio", product.Descripcio);
+        cmd.Parameters.AddWithValue("@Price", product.Price);
+        cmd.Parameters.AddWithValue("@Descompte", product.Descompte);
+        cmd.Parameters.AddWithValue("@IdFamilia", product.IdFamilia);
+        cmd.Parameters.AddWithValue("@Name", product.Name);
+
+        int rows = cmd.ExecuteNonQuery();
+
+        cmd.ExecuteNonQuery();
+        dbConn.Close();
+    }
+    public static bool Delete(DatabaseConnection dbConn, Guid Id)
+    {
+        dbConn.Open();
+
+        string sql = @"DELETE FROM Product WHERE Id = @Id";
+
+        using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
+        cmd.Parameters.AddWithValue("@Id", Id);
+
+        int rows = cmd.ExecuteNonQuery();
+
+        dbConn.Close();
+
+        return rows > 0;
+    }
+
+
 }
