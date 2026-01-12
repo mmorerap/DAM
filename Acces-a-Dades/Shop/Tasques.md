@@ -2,7 +2,7 @@ Crear CarritoProducte en el midel
 
 //Acabar tots els CRUDS
     Model FET - revistat a la BDD
-    ADO(Carpeta Repository) No comensat
+    ADO(Carpeta Repository) - FET
     EndPoint
 
 
@@ -10,7 +10,6 @@ Crear CarritoProducte en el midel
     Producte
     Carrito
 
-//Acabar tots els CRUDS
 
 // Factory 
      aplicar descomptes utilitzan querry string FACTORY no fa falta contemplarho a nivell de BDD
