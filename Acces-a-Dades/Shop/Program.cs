@@ -17,7 +17,7 @@ WebApplication webApp = builder.Build();
 // Registra els endpoints en un mètode separat
 webApp.MapProductEndpoints(dbConn);
 webApp.MapFamiliaEndpoints(dbConn);
-
+webApp.MapCarritoComprasEndpoints(dbConn);
 
 
 webApp.Run();
