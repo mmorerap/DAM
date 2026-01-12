@@ -12,8 +12,8 @@ Crear CarritoProducte en el midel
 
 //Acabar tots els CRUDS
 
-// Factory
-
+// Factory 
+     aplicar descomptes utilitzan querry string FACTORY no fa falta contemplarho a nivell de BDD
 
 //Validacio
 
