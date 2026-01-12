@@ -3,6 +3,7 @@ using static System.Console;
 using dbdemo.Services;
 using dbdemo.Model;
 
+//v1.1
 
 namespace dbdemo.Repository;
 
@@ -15,7 +16,7 @@ class ProductADO
 
         dbConn.Open();
 
-        string sql = @"INSERT INTO Products (Id, Code,Descripcio,Price,Descompte,IdFamilia,Name)
+        string sql = @"INSERT INTO Product (Id, Code,Descripcio,Price,Descompte,IdFamilia,Name)
                         VALUES (@Id, @Code, @Descripcio, @Price, @Descompte, @IdFamilia, @Name)";
 
         using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
@@ -36,7 +37,7 @@ class ProductADO
         List<Product> products = new();
 
         dbConn.Open();
-        string sql = "SELECT Id, Code,Descripcio,Price,Descompte,IdFamilia,Name FROM Products";
+        string sql = "SELECT Id, Code,Descripcio,Price,Descompte,IdFamilia,Name FROM Product";
 
         using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
         using SqlDataReader reader = cmd.ExecuteReader();
@@ -63,7 +64,7 @@ class ProductADO
     public static Product? GetById(DatabaseConnection dbConn, Guid id)
     {
         dbConn.Open();
-        string sql = "SELECT Id, Code,Descripcio,Price,Descompte,IdFamilia,Name FROM Products WHERE Id = @Id";
+        string sql = "SELECT Id, Code,Descripcio,Price,Descompte,IdFamilia,Name FROM Product WHERE Id = @Id";
 
         using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
         cmd.Parameters.AddWithValue("@Id", id);
