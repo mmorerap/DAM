@@ -3,16 +3,17 @@ Crear CarritoProducte en el midel
 //Acabar tots els CRUDS
     Model FET - revistat a la BDD
     ADO(Carpeta Repository) - FET
+    
     EndPoint 
-        CarritoCompra - FET
-        Familia
-        Product
+        CarritoCompra 
+        Familia - FET 
+        Product -FET
         CarritoProducte
 
 Crear Docomentacio Querrys (Insomnia) y comprovar si funciona
-        CarritoCompra - FET
-        Familia
-        Product
+        CarritoCompra
+        Familia - FET
+        Product - FET
         CarritoProducte
 
 // DTO
