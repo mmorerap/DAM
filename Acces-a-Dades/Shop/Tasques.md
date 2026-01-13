@@ -16,17 +16,16 @@ Crear Docomentacio Querrys (Insomnia) y comprovar si funciona
         Product - FET
         CarritoProducte - FET
 
-// DTO
+// DTO + Validacio
     CarritoCompra
     Familia - FET
-    Product
+    Product - FET
     CarritoProducte -FET
 
 
 // Factory 
      aplicar descomptes utilitzan querry string FACTORY no fa falta contemplarho a nivell de BDD
 
-//Validacio
 
 // Repositori Miquel
 https://github.com/projecteinf/DAM2025-26/blob/main/ACCES%20A%20DADES/

@@ -43,6 +43,8 @@ public static class EndpointsCarritoProducte
         // POST /carritoProducte
         app.MapPost("/carritoProducte", (CarritoProducteRequest req) =>
         {
+
+            Guid id;
             Result result = CarritoProducteValidator.Validate(req);
 
             //posarho a families
@@ -55,40 +57,38 @@ public static class EndpointsCarritoProducte
                 });
             }
 
-            CarritoProducte carritoProducte = new CarritoProducte
-            {
-                Id = Guid.NewGuid(),
-                ID_CARR = req.ID_CARR,
-                ID_PROD = req.ID_PROD,
-                Quantitat = req.Quantitat
-            };
-
+            id = Guid.NewGuid();
+            CarritoProducte carritoProducte = req.ToCarritoProducte(id);
             CarritoProducteADO.Insert(dbConn, carritoProducte);
 
-            return Results.Created($"/carritoProducte/{carritoProducte.Id}", carritoProducte);
+            return Results.Created($"/carritoProducte/{carritoProducte.Id}", CarritoProducteResponse.FromCarritoProducte(carritoProducte));
         });
 
 
         // UPDATE /carritoProducte/{id}
         app.MapPut("/carritoProducte/{id}", (Guid id, CarritoProducteRequest req) =>
         {
-            var existing = CarritoProducteADO.GetById(dbConn, id);
+            Result result = CarritoProducteValidator.Validate(req);
+            if (!result.IsOk)
+            {
+                return Results.BadRequest(new
+                {
+                    error = result.ErrorCode,
+                    message = result.ErrorMessage
+                });
+            }
 
-            if (existing == null)
+            CarritoProducte? carritoProducte = CarritoProducteADO.GetById(dbConn, id);
+
+            if (carritoProducte == null)
             {
                 return Results.NotFound();
             }
 
-            CarritoProducte updated = new CarritoProducte
-            {
-                Id = id,
-                ID_CARR = req.ID_CARR,
-                ID_PROD = req.ID_PROD,
-                Quantitat = req.Quantitat
-            };
+            CarritoProducte updated = req.ToCarritoProducte(id);
 
             CarritoProducteADO.Update(dbConn, updated);
-            return Results.Ok(updated);
+            return Results.Ok(CarritoProducteResponse.FromCarritoProducte(updated));
         });
 
         // DELETE /carritoProducte/{id}
