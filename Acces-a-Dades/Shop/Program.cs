@@ -18,6 +18,6 @@ WebApplication webApp = builder.Build();
 webApp.MapProductEndpoints(dbConn);
 webApp.MapFamiliaEndpoints(dbConn);
 webApp.MapCarritoComprasEndpoints(dbConn);
-
+webApp.MapCarritoProducteEndpoints(dbConn);
 
 webApp.Run();
