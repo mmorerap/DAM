@@ -2,7 +2,7 @@ using dbdemo.Model;
 //Demanar Informacio a la BDD
 namespace dbdemo.DTO;
 
-public record CarritoProducteResponse(Guid Id, string ID_CARR, string ID_PROD, string Quantitat) 
+public record CarritoProducteResponse(Guid Id, string ID_CARR, string ID_PROD, int Quantitat) 
 {
     // Guanyem CONTROL sobre com es fa la conversió
 

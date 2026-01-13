@@ -46,7 +46,7 @@ class CarritoProducteADO
                 Id = reader.GetGuid(0),
                 ID_CARR = reader.GetString(1),
                 ID_PROD = reader.GetString(2),
-                Quantitat = reader.GetString(3),
+                Quantitat = reader.GetInt32(3),
             });
         }
 
@@ -72,7 +72,7 @@ class CarritoProducteADO
                 Id = reader.GetGuid(0),
                 ID_CARR = reader.GetString(1),
                 ID_PROD = reader.GetString(2),
-                Quantitat = reader.GetString(3),
+                Quantitat = reader.GetInt32(3),
             };
         }
 
