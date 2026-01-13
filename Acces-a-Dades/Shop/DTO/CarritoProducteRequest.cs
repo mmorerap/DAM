@@ -2,7 +2,7 @@ using dbdemo.Model;
 
 namespace dbdemo.DTO;
 
-public record CarritoProducteRequest( string ID_CARR, string ID_PROD, int Quantitat) 
+public record CarritoProducteRequest( Guid ID_CARR, Guid ID_PROD, int Quantitat) 
 {
     // Guanyem CONTROL sobre com es fa la conversió
 

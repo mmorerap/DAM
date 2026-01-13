@@ -45,6 +45,16 @@ public static class EndpointsFamilia
         app.MapPost("/familia", (FamiliaRequest req) =>
         {
             Result result = FamiliaValidator.Validate(req);
+
+            if (!result.IsOk)
+            {
+                return Results.BadRequest(new 
+                {
+                    error = result.ErrorCode,
+                    message = result.ErrorMessage
+                });
+            }
+
             Familia familia = new Familia
             {
                 Id = Guid.NewGuid(),

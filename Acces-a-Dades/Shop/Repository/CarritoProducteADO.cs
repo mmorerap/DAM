@@ -44,8 +44,8 @@ class CarritoProducteADO
             carritoProductes.Add(new CarritoProducte
             {
                 Id = reader.GetGuid(0),
-                ID_CARR = reader.GetString(1),
-                ID_PROD = reader.GetString(2),
+                ID_CARR = reader.GetGuid(1),
+                ID_PROD = reader.GetGuid(2),
                 Quantitat = reader.GetInt32(3),
             });
         }
@@ -70,8 +70,8 @@ class CarritoProducteADO
             carritoProducte = new CarritoProducte
             {
                 Id = reader.GetGuid(0),
-                ID_CARR = reader.GetString(1),
-                ID_PROD = reader.GetString(2),
+                ID_CARR = reader.GetGuid(1),
+                ID_PROD = reader.GetGuid(2),
                 Quantitat = reader.GetInt32(3),
             };
         }
@@ -100,6 +100,8 @@ class CarritoProducteADO
         cmd.Parameters.AddWithValue("@ID_CARR", carritoProducte.ID_CARR);
         cmd.Parameters.AddWithValue("@ID_PROD", carritoProducte.ID_PROD);
         cmd.Parameters.AddWithValue("@Quantitat", carritoProducte.Quantitat);
+
+        cmd.ExecuteNonQuery();
 
         dbConn.Close();
     }

@@ -9,12 +9,13 @@ public static class CarritoProducteValidator
 {
     public static Result Validate(CarritoProducteRequest carritoProducte)
     {
-        if (carritoProducte.ID_CARR == null)
+
+        if (carritoProducte.ID_CARR == Guid.Empty)
         {
             return Result.Failure("No ha posat cap valor a ID_CARR", "ID_CARR");
         }
 
-        if (carritoProducte.ID_PROD == null)
+        if (carritoProducte.ID_PROD == Guid.Empty)
         {
             return Result.Failure("No ha posat cap valor a ID_PROD", "ID_PROD");
         }

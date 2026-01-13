@@ -8,19 +8,19 @@ Crear CarritoProducte en el midel
         CarritoCompra 
         Familia - FET
         Product -FET
-        CarritoProducte
+        CarritoProducte - FET
 
 Crear Docomentacio Querrys (Insomnia) y comprovar si funciona
         CarritoCompra
         Familia - FET
         Product - FET
-        CarritoProducte
+        CarritoProducte - FET
 
 // DTO
     CarritoCompra
     Familia - FET
     Product
-    CarritoProducte
+    CarritoProducte -FET
 
 
 // Factory 

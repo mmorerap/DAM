@@ -44,6 +44,17 @@ public static class EndpointsCarritoProducte
         app.MapPost("/carritoProducte", (CarritoProducteRequest req) =>
         {
             Result result = CarritoProducteValidator.Validate(req);
+
+            //posarho a families
+            if (!result.IsOk)
+            {
+                return Results.BadRequest(new 
+                {
+                    error = result.ErrorCode,
+                    message = result.ErrorMessage
+                });
+            }
+
             CarritoProducte carritoProducte = new CarritoProducte
             {
                 Id = Guid.NewGuid(),
