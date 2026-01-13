@@ -6,7 +6,7 @@ Crear CarritoProducte en el midel
     
     EndPoint 
         CarritoCompra 
-        Familia - FET 
+        Familia - FET
         Product -FET
         CarritoProducte
 
@@ -18,7 +18,7 @@ Crear Docomentacio Querrys (Insomnia) y comprovar si funciona
 
 // DTO
     CarritoCompra
-    Familia
+    Familia - FET
     Product
     CarritoProducte
 
