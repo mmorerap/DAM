@@ -77,6 +77,8 @@ public static class EndpointsProduct
 
         // DELETE /product/{id}
         app.MapDelete("/product/{id}", (Guid id) => ProductADO.Delete(dbConn, id) ? Results.NoContent() : Results.NotFound());
+
+        
     }
 
 
