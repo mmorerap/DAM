@@ -14,7 +14,7 @@ public static class EndpointsFamilia
 {
     public static void MapFamiliaEndpoints(this WebApplication app, DatabaseConnection dbConn)
     {
-        // GET /families
+        // GET /familias
         app.MapGet("/familias", () =>
         {
             List<Familia> familias = FamiliaADO.GetAll(dbConn);
@@ -56,6 +56,32 @@ public static class EndpointsFamilia
 
             return Results.Created($"/products/{familia.Id}", familia);
         });
+
+
+        // UPDATE /familia/{id}
+        app.MapPut("/familia/{id}", (Guid id, FamiliaRequest req) =>
+        {
+            var existing = FamiliaADO.GetById(dbConn, id);
+
+            if (existing == null)
+            {
+                return Results.NotFound();
+            }
+
+            Familia updated = new Familia
+            {
+                Id = id,
+                Nom = req.Nom,
+                Descripcio = req.Descripcio,
+            };
+
+            FamiliaADO.Update(dbConn, updated);
+            return Results.Ok(updated);
+        });
+
+        // DELETE /familia/{id}
+        app.MapDelete("/familia/{id}", (Guid id) => FamiliaADO.Delete(dbConn, id) ? Results.NoContent() : Results.NotFound());
+
     }
 
 
