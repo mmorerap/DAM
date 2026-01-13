@@ -1,6 +1,9 @@
 using dbdemo.Repository;
 using dbdemo.Services;
 using dbdemo.Model;
+using dbdemo.DTO;
+using dbdemo.Common;
+using dbdemo.Validators;
 
 namespace dbdemo.Endpoints;
 
@@ -12,7 +15,12 @@ public static class EndpointsProduct
         app.MapGet("/products", () =>
         {
             List<Product> products = ProductADO.GetAll(dbConn);
-            return Results.Ok(products);
+            List<ProducteResponse> producteResponses = new List<ProducteResponse>();
+            foreach (Product product in products)
+            {
+                producteResponses.Add(ProducteResponse.FromProducte(product));
+            }
+            return Results.Ok(producteResponses);
         });
 
         // GET Product by id
@@ -21,7 +29,7 @@ public static class EndpointsProduct
             Product? product = ProductADO.GetById(dbConn, id);
 
             return product is not null
-                ? Results.Ok(product)
+                ? Results.Ok(ProducteResponse.FromProducte(product))
                 : Results.NotFound(new { message = $"Product with Id {id} not found." });
 
 
@@ -31,48 +39,53 @@ public static class EndpointsProduct
 
 
         // POST /product
-        app.MapPost("/product", (ProductRequest req) =>
+        app.MapPost("/product", (ProducteRequest req) =>
         {
-            Product product = new Product
-            {
-                Id = Guid.NewGuid(),
-                Code = req.Code,
-                Descripcio = req.Descripcio,
-                Price = req.Price,
-                Descompte = req.Descompte,
-                IdFamilia = req.IdFamilia,
-                Name = req.Name,
-            };
+            Guid id;
+            Result result = ProducteValidator.Validate(req);
 
+            if (!result.IsOk)
+            {
+                return Results.BadRequest(new 
+                {
+                    error = result.ErrorCode,
+                    message = result.ErrorMessage
+                });
+            }
+
+
+            id =  Guid.NewGuid();
+            Product product = req.ToProducte(id);
             ProductADO.Insert(dbConn, product);
 
             return Results.Created($"/products/{product.Id}", product);
         });
 
         // UPDATE /product/{id}
-        app.MapPut("/product/{id}", (Guid id, ProductRequest req) =>
+        app.MapPut("/product/{id}", (Guid id, ProducteRequest req) =>
         {
-            var existing = ProductADO.GetById(dbConn, id);
+            Result result = ProducteValidator.Validate(req);
 
-            if (existing == null)
+            if (!result.IsOk)
+            {
+                return Results.BadRequest(new
+                {
+                    error = result.ErrorCode,
+                    message = result.ErrorMessage
+                });
+            }
+
+            Product? product = ProductADO.GetById(dbConn, id);
+
+            if (product == null)
             {
                 return Results.NotFound();
             }
 
-            Product updated = new Product
-            {
-                Id = id,
-                Code = req.Code,
-                Descripcio = req.Descripcio,
-                Price = req.Price,
-                Descompte = req.Descompte,
-                IdFamilia = req.IdFamilia,
-                Name = req.Name
-            };
+            Product producteUpdt = req.ToProducte(id);
 
-            ProductADO.Update(dbConn, updated);
-
-            return Results.Ok(updated);
+            ProductADO.Update(dbConn, producteUpdt);
+            return Results.Ok(producteUpdt);
         });
 
         // DELETE /product/{id}
@@ -84,5 +97,5 @@ public static class EndpointsProduct
 
 }
 
-public record ProductRequest(string Code, string Descripcio, decimal Price ,decimal Descompte,Guid IdFamilia,string Name); 
+//public record ProductRequest(string Code, string Descripcio, decimal Price ,decimal Descompte,Guid IdFamilia,string Name); 
 

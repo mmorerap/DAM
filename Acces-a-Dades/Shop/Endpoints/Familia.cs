@@ -43,7 +43,8 @@ public static class EndpointsFamilia
 
         // POST /familia
         app.MapPost("/familia", (FamiliaRequest req) =>
-        {
+        {   
+            Guid id;
             Result result = FamiliaValidator.Validate(req);
 
             if (!result.IsOk)
@@ -55,38 +56,38 @@ public static class EndpointsFamilia
                 });
             }
 
-            Familia familia = new Familia
-            {
-                Id = Guid.NewGuid(),
-                Nom = req.Nom,
-                Descripcio = req.Descripcio
-            };
-
+            id = Guid.NewGuid();
+            Familia familia = req.ToFamilia(id);
             FamiliaADO.Insert(dbConn, familia);
 
-            return Results.Created($"/products/{familia.Id}", familia);
+            return Results.Created($"/familia/{familia.Id}", FamiliaResponse.FromFamilia(familia));
         });
 
 
         // UPDATE /familia/{id}
         app.MapPut("/familia/{id}", (Guid id, FamiliaRequest req) =>
         {
-            var existing = FamiliaADO.GetById(dbConn, id);
+            Result result = FamiliaValidator.Validate(req);
+            if (!result.IsOk)
+            {
+                return Results.BadRequest(new 
+                {
+                    error = result.ErrorCode,
+                    message = result.ErrorMessage
+                });
+            }
 
-            if (existing == null)
+            Familia? familia = FamiliaADO.GetById(dbConn, id);
+
+            if (familia == null)
             {
                 return Results.NotFound();
             }
 
-            Familia updated = new Familia
-            {
-                Id = id,
-                Nom = req.Nom,
-                Descripcio = req.Descripcio,
-            };
+            Familia familiaUpdt = req.ToFamilia(id);
 
-            FamiliaADO.Update(dbConn, updated);
-            return Results.Ok(updated);
+            FamiliaADO.Update(dbConn, familiaUpdt);
+            return Results.Ok(FamiliaResponse.FromFamilia(familiaUpdt));
         });
 
         // DELETE /familia/{id}
