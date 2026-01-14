@@ -37,51 +37,10 @@ public static class EndpointsCarritoCompras
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // GET CarritoCompra by id
-        // app.MapGet("/carritoCompraa/{id}/import", (Guid id, string TipoDescompte="Normal") =>
-        // {
-        //     //AQUI
-        //     List<ImportAndCo> importAndCo = CarritoComprasADO.GetImportById(dbConn, id)!;
-            
-        //     IDescompteFactory factory = TipoDescompte switch
-        //     {
-        //         "Normal" => new DescompteNormalFactory(),
-        //         "Premium"   => new DescomptePrmiumFactory(),
-        //         _ => throw new ArgumentException("Tipus de descompte desconegut.")
-        //     };
-           
-
-        //     IDescompteTipe descompte = factory.CreateDescompte();
-            
-        //     CalcularDescompte calcular = new CalcularDescompte();
-        //     calcular.Calcular(importAndCo,descompte);
-           
-
-        //     return importAndCo is not null
-        //         // ? Results.Ok(CarritoCompraResponse.FromCarritoCompras(carritoCompras))
-        //         ? Results.Ok(descompte)
-
-        //         : Results.NotFound(new { message = $"CarritoCompras with Id {id} not found." });
-
-        // });
-
+      
         app.MapGet("/carritoCompra/{id}/import", (Guid id, string TipoDescompte = "Normal") =>
         {
-            List<ImportAndCo> importAndCo =
-                CarritoComprasADO.GetImportById(dbConn, id);
+            List<ImportAndCo> importAndCo = CarritoComprasADO.GetImportById(dbConn, id);
 
             if (importAndCo is null || importAndCo.Count == 0)
             {
@@ -105,39 +64,6 @@ public static class EndpointsCarritoCompras
 
             return Results.Ok(new {dte,import,importAndCo});
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -187,7 +113,6 @@ public static class EndpointsCarritoCompras
 
         // DELETE /carritoCompra/{id}
         app.MapDelete("/carritoCompra/{id}", (Guid id) => CarritoComprasADO.Delete(dbConn, id) ? Results.NoContent() : Results.NotFound());
-
 
 
 
