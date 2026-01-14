@@ -2,36 +2,42 @@ using dbdemo.Repository;
 using dbdemo.Services;
 using dbdemo.Model;
 using dbdemo.DTO;
+using dbdemo.Validators;
+using dbdemo.Common;
 namespace dbdemo.Endpoints;
 
 public static class EndpointsCarritoCompras
 {
     public static void MapCarritoComprasEndpoints(this WebApplication app, DatabaseConnection dbConn)
     {
-        // GET /products
-        app.MapGet("/CarritoCompras", () =>
+        // GET /CarritoCompras
+        app.MapGet("/carritoCompras", () =>
         {
             List<CarritoCompras> CarritoCompras = CarritoComprasADO.GetAll(dbConn);
+            List<CarritoCompraResponse> CarritoComprasResponses = new List<CarritoCompraResponse>();
+            foreach (CarritoCompras carritoCompras in CarritoCompras)
+            {
+                CarritoComprasResponses.Add(CarritoCompraResponse.FromCarritoCompras(carritoCompras));   
+            }
             return Results.Ok(CarritoCompras);
         });
 
         // GET CarritoCompra by id
-        app.MapGet("/CarritoCompra/{id}", (Guid id) =>
+        app.MapGet("/carritoCompra/{id}", (Guid id) =>
         {
-            CarritoCompras carritoCompra = CarritoComprasADO.GetById(dbConn, id)!;
+            CarritoCompras carritoCompras = CarritoComprasADO.GetById(dbConn, id)!;
 
-            return carritoCompra is not null
-                ? Results.Ok(carritoCompra)
+            return carritoCompras is not null
+                ? Results.Ok(CarritoCompraResponse.FromCarritoCompras(carritoCompras))
                 : Results.NotFound(new { message = $"CarritoCompras with Id {id} not found." });
-
 
         });
 
 
 
 
-        // POST /familia
-        app.MapPost("/CarritoCompra", (FamiliaRequest req) =>
+        // POST /carritoCompra
+        app.MapPost("/carritoCompra", (CarritoCompraRequest req) =>
         {
             CarritoCompras carritoCompra = new CarritoCompras
             {
@@ -41,13 +47,44 @@ public static class EndpointsCarritoCompras
 
             CarritoComprasADO.Insert(dbConn, carritoCompra);
 
-            return Results.Created($"/CarritoCompra/{carritoCompra.Id}", carritoCompra);
+            return Results.Created($"/carritoCompra/{carritoCompra.Id}", carritoCompra);
         });
 
 
-        //UPTATE
 
-        //IMPORT aplicar descomptes utilitzan querry string FACTORY
+
+
+
+
+        
+        // UPDATE /carritoCompra/{id}
+        app.MapPut("/carritoCompra/{id}", (Guid id, CarritoCompraRequest req) =>
+        {
+            Result result = CarritoComprasValidator.Validate(req);
+            if (!result.IsOk)
+            {
+                return Results.BadRequest(new 
+                {
+                    error = result.ErrorCode,
+                    message = result.ErrorMessage
+                });
+            }
+
+            CarritoCompras? carritoCompras = CarritoComprasADO.GetById(dbConn, id);
+
+            if (carritoCompras == null)
+            {
+                return Results.NotFound();
+            }
+
+            CarritoCompras carritoComprasUpdt = req.ToCarritoCompra(id);
+
+            CarritoComprasADO.Update(dbConn, carritoComprasUpdt);
+            return Results.Ok(CarritoCompraResponse.FromCarritoCompras(carritoComprasUpdt));
+        });
+
+        // DELETE /carritoCompra/{id}
+        app.MapDelete("/carritoCompra/{id}", (Guid id) => CarritoComprasADO.Delete(dbConn, id) ? Results.NoContent() : Results.NotFound());
 
 
 
