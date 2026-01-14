@@ -55,7 +55,7 @@ class CarritoComprasADO
     public static CarritoCompras? GetById(DatabaseConnection dbConn, Guid id)
     {
         dbConn.Open();
-        string sql = "SELECT Id, Nom FROM CarritoCompras WHERE Id = @Id";
+        string sql = "SELECT Id, Nom, Descripcio FROM CarritoCompras WHERE Id = @Id";
 
         using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
         cmd.Parameters.AddWithValue("@Id", id);
