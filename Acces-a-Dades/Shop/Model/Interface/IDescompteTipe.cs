@@ -1,5 +1,5 @@
 namespace dbdemo.Model;
 public interface IDescompteTipe
 {
-    void Execute();
+    decimal CalcularDescompte(decimal import);
 }

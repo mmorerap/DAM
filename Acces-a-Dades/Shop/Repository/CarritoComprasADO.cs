@@ -77,7 +77,6 @@ class CarritoComprasADO
         return carritoCompras;
     }
 
-
      public static void Update(DatabaseConnection dbConn, CarritoCompras carritoCompras)
     {
         dbConn.Open();
@@ -114,4 +113,43 @@ class CarritoComprasADO
 
         return rows > 0;
     }
+
+
+    public static List<ImportAndCo> GetImportById(DatabaseConnection dbConn, Guid id)
+    {
+        List<ImportAndCo> importAndCos = new();
+
+        dbConn.Open();
+        string sql = "SELECT cp.ID_PROD , cp.Quantitat , p.Price , p.Descompte FROM CarritoProducte cp INNER JOIN Product p ON p.ID = cp.ID_PROD WHERE cp.ID_CARR = @Id";
+
+        using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
+        cmd.Parameters.AddWithValue("@Id", id);
+
+        using SqlDataReader reader = cmd.ExecuteReader();
+
+        while (reader.Read())
+        {
+            importAndCos.Add(new ImportAndCo
+            {
+                ID_PROD = reader.GetGuid(0),
+                Quantitat = reader.GetInt32(1),
+                Price = reader.GetDecimal(2),
+                Descompte = reader.GetDecimal(3)
+            });
+        }
+
+        dbConn.Close();
+        return importAndCos;
+    }
+
+
+
+
+
+
+
+
+
+
+
 }

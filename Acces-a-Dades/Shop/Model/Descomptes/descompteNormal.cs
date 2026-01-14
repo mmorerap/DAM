@@ -1,9 +1,8 @@
 namespace dbdemo.Model;
-
 public class DescompteNormal : IDescompteTipe
 {
-    public void Execute()
+    public decimal CalcularDescompte(decimal import)
     {
-        Console.WriteLine("Client normal.");
+        return import * 0.05m;
     }
 }

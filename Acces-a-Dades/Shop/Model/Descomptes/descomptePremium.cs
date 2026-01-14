@@ -1,8 +1,8 @@
 namespace dbdemo.Model;
 public class DescomptePremium : IDescompteTipe
 {
-    public void Execute()
+    public decimal CalcularDescompte(decimal import)
     {
-        Console.WriteLine("Client premium.");
+        return import * 0.10m;
     }
 }

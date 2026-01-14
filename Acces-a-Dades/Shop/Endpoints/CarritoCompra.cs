@@ -4,6 +4,7 @@ using dbdemo.Model;
 using dbdemo.DTO;
 using dbdemo.Validators;
 using dbdemo.Common;
+using dbdemo.Factory;
 namespace dbdemo.Endpoints;
 
 public static class EndpointsCarritoCompras
@@ -25,6 +26,7 @@ public static class EndpointsCarritoCompras
         // GET CarritoCompra by id
         app.MapGet("/carritoCompra/{id}", (Guid id) =>
         {
+
             CarritoCompras carritoCompras = CarritoComprasADO.GetById(dbConn, id)!;
 
             return carritoCompras is not null
@@ -48,21 +50,44 @@ public static class EndpointsCarritoCompras
 
 
 
-
-        // POST /carritoCompra
-        app.MapPost("/carritoCompra", (CarritoCompraRequest req , string TipoDescompte="Normal") =>
+        // GET CarritoCompra by id
+        app.MapGet("/carritoCompra/{id}/import", (Guid id, string TipoDescompte="Normal") =>
         {
-            Console.WriteLine("$AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  "+TipoDescompte+"  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-            CarritoCompras carritoCompra = new CarritoCompras
+            //AQUI
+            CarritoCompras carritoCompras = CarritoComprasADO.GetById(dbConn, id)!;
+            
+            IDescompteFactory factory = TipoDescompte switch
             {
-                Id = Guid.NewGuid(),
-                Nom = req.Nom,
+                "Normal" => new DescompteNormalFactory(),
+                "Premium"   => new DescomptePrmiumFactory(),
+                _ => throw new ArgumentException("Tipus de descompte desconegut.")
             };
 
-            CarritoComprasADO.Insert(dbConn, carritoCompra);
+            IDescompteTipe descompte = factory.CreateDescompte();
+           
 
-            return Results.Created($"/carritoCompra/{carritoCompra.Id}", carritoCompra);
+
+            return carritoCompras is not null
+                // ? Results.Ok(CarritoCompraResponse.FromCarritoCompras(carritoCompras))
+                ? Results.Ok(descompte)
+
+                : Results.NotFound(new { message = $"CarritoCompras with Id {id} not found." });
+
         });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
