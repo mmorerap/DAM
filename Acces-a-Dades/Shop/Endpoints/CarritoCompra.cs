@@ -51,30 +51,60 @@ public static class EndpointsCarritoCompras
 
 
         // GET CarritoCompra by id
-        app.MapGet("/carritoCompra/{id}/import", (Guid id, string TipoDescompte="Normal") =>
-        {
-            //AQUI
-            CarritoCompras carritoCompras = CarritoComprasADO.GetById(dbConn, id)!;
+        // app.MapGet("/carritoCompraa/{id}/import", (Guid id, string TipoDescompte="Normal") =>
+        // {
+        //     //AQUI
+        //     List<ImportAndCo> importAndCo = CarritoComprasADO.GetImportById(dbConn, id)!;
             
+        //     IDescompteFactory factory = TipoDescompte switch
+        //     {
+        //         "Normal" => new DescompteNormalFactory(),
+        //         "Premium"   => new DescomptePrmiumFactory(),
+        //         _ => throw new ArgumentException("Tipus de descompte desconegut.")
+        //     };
+           
+
+        //     IDescompteTipe descompte = factory.CreateDescompte();
+            
+        //     CalcularDescompte calcular = new CalcularDescompte();
+        //     calcular.Calcular(importAndCo,descompte);
+           
+
+        //     return importAndCo is not null
+        //         // ? Results.Ok(CarritoCompraResponse.FromCarritoCompras(carritoCompras))
+        //         ? Results.Ok(descompte)
+
+        //         : Results.NotFound(new { message = $"CarritoCompras with Id {id} not found." });
+
+        // });
+
+        app.MapGet("/carritoCompra/{id}/import", (Guid id, string TipoDescompte = "Normal") =>
+        {
+            List<ImportAndCo> importAndCo =
+                CarritoComprasADO.GetImportById(dbConn, id);
+
+            if (importAndCo is null || importAndCo.Count == 0)
+            {
+                return Results.NotFound(new
+                {
+                    message = $"CarritoCompras with Id {id} not found."
+                });
+            }
+
             IDescompteFactory factory = TipoDescompte switch
             {
                 "Normal" => new DescompteNormalFactory(),
-                "Premium"   => new DescomptePrmiumFactory(),
+                "Premium" => new DescomptePrmiumFactory(),
                 _ => throw new ArgumentException("Tipus de descompte desconegut.")
             };
 
             IDescompteTipe descompte = factory.CreateDescompte();
-           
+            Decimal import = CalculsCarro.Calcular(importAndCo);
+            Decimal dte = descompte.CalcularDescompte(import);
+            
 
-
-            return carritoCompras is not null
-                // ? Results.Ok(CarritoCompraResponse.FromCarritoCompras(carritoCompras))
-                ? Results.Ok(descompte)
-
-                : Results.NotFound(new { message = $"CarritoCompras with Id {id} not found." });
-
+            return Results.Ok(new {dte,import,importAndCo});
         });
-
 
 
 
