@@ -36,9 +36,23 @@ public static class EndpointsCarritoCompras
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
         // POST /carritoCompra
-        app.MapPost("/carritoCompra", (CarritoCompraRequest req) =>
+        app.MapPost("/carritoCompra", (CarritoCompraRequest req , string TipoDescompte="Normal") =>
         {
+            Console.WriteLine("$AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  "+TipoDescompte+"  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
             CarritoCompras carritoCompra = new CarritoCompras
             {
                 Id = Guid.NewGuid(),
@@ -52,6 +66,39 @@ public static class EndpointsCarritoCompras
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // POST /carritoCompra SENSE BASE
+        app.MapPost("/carritoCompraa", (CarritoCompraRequest req) =>
+        {
+            CarritoCompras carritoCompra = new CarritoCompras
+            {
+                Id = Guid.NewGuid(),
+                Nom = req.Nom,
+            };
+
+            CarritoComprasADO.Insert(dbConn, carritoCompra);
+
+            return Results.Created($"/carritoCompra/{carritoCompra.Id}", carritoCompra);
+        });
 
 
 
