@@ -68,6 +68,15 @@ public static class EndpointsCarritoCompras
 
 
 
+
+
+
+
+
+
+
+
+
         // POST /carritoCompra SENSE BASE
         /*
             {
@@ -83,7 +92,15 @@ public static class EndpointsCarritoCompras
         {
 
             Compra compra = req.ToCompra();
-           
+            Result result = CompraValidator.Validate(compra);
+             if (!result.IsOk)
+            {
+                return Results.BadRequest(new 
+                {
+                    error = result.ErrorCode,
+                    message = result.ErrorMessage
+                });
+            }
 
             // CarritoComprasADO.Insert(dbConn, compra);
 
