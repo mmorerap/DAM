@@ -5,6 +5,7 @@ using dbdemo.DTO;
 using dbdemo.Validators;
 using dbdemo.Common;
 using dbdemo.Factory;
+using dbdemo.Domain.Entities;
 namespace dbdemo.Endpoints;
 
 public static class EndpointsCarritoCompras
@@ -68,48 +69,77 @@ public static class EndpointsCarritoCompras
 
 
         // POST /carritoCompra SENSE BASE
-        app.MapPost("/carritoCompraa", (CarritoCompraRequest req) =>
-        {
-            CarritoCompras carritoCompra = new CarritoCompras
+        /*
             {
-                Id = Guid.NewGuid(),
-                Nom = req.Nom,
-            };
+                "Client": "BCDF590A-E279-485A-928C-31D0AFEF0598BCDF590A-E279-485A-928C-31D0AFEF0598",
+                "Data": "2026-10-12",
+                "Productes": [
+                    {"Producte":"BCDF590A-E279-485A-928C-31D0AFEF0511","Quantitat":2},
+                    {"Producte":"8C7E2A40-3390-426A-89BF-62ECF9A5A537","Quantitat":4}
+                ]
+            }
+        */
+        app.MapPost("/compra", (CompraRequest req) =>
+        {
 
-            CarritoComprasADO.Insert(dbConn, carritoCompra);
+            Compra compra = req.ToCompra();
 
-            return Results.Created($"/carritoCompra/{carritoCompra.Id}", carritoCompra);
+           
+
+            // CarritoComprasADO.Insert(dbConn, compra);
+
+            return Results.Ok(compra);
         });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
         
-        // UPDATE /carritoCompra/{id}
-        app.MapPut("/carritoCompra/{id}", (Guid id, CarritoCompraRequest req) =>
-        {
-            Result result = CarritoComprasValidator.Validate(req);
-            if (!result.IsOk)
-            {
-                return Results.BadRequest(new 
-                {
-                    error = result.ErrorCode,
-                    message = result.ErrorMessage
-                });
-            }
+        // // UPDATE /carritoCompra/{id}
+        // app.MapPut("/carritoCompra/{id}", (Guid id, CarritoCompraRequest req) =>
+        // {
+        //     Result result = CarritoComprasValidator.Validate(req);
+        //     if (!result.IsOk)
+        //     {
+        //         return Results.BadRequest(new 
+        //         {
+        //             error = result.ErrorCode,
+        //             message = result.ErrorMessage
+        //         });
+        //     }
 
-            CarritoCompras? carritoCompras = CarritoComprasADO.GetById(dbConn, id);
+        //     CarritoCompras? carritoCompras = CarritoComprasADO.GetById(dbConn, id);
 
-            if (carritoCompras == null)
-            {
-                return Results.NotFound();
-            }
+        //     if (carritoCompras == null)
+        //     {
+        //         return Results.NotFound();
+        //     }
 
-            CarritoCompras carritoComprasUpdt = req.ToCarritoCompra(id);
+        //     CarritoCompras carritoComprasUpdt = req.ToCarritoCompra(id);
 
-            CarritoComprasADO.Update(dbConn, carritoComprasUpdt);
-            return Results.Ok(CarritoCompraResponse.FromCarritoCompras(carritoComprasUpdt));
-        });
+        //     CarritoComprasADO.Update(dbConn, carritoComprasUpdt);
+        //     return Results.Ok(CarritoCompraResponse.FromCarritoCompras(carritoComprasUpdt));
+        // });
 
         // DELETE /carritoCompra/{id}
         app.MapDelete("/carritoCompra/{id}", (Guid id) => CarritoComprasADO.Delete(dbConn, id) ? Results.NoContent() : Results.NotFound());
