@@ -11,8 +11,9 @@ ATENCIÓ
 */
 
     public Client client { get; set; } 
-    
-    //public List<CarritoProducteLinea> Lineas { get; set; }
+
+    public DateOnly Data { get; set; } 
+    public List<CarritoProducteLinea> Lineas { get; set; }
 
 
 

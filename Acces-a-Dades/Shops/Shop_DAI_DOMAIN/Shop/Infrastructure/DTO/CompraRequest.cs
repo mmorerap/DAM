@@ -18,6 +18,15 @@ public record CompraRequest( Guid IdClient, DateOnly Data, List<ProducteCompraRe
         Compra compraDomain = new Compra();
         compraDomain.client = client;
 
+        compraDomain.Data = Data;
+
+        List<CarritoProducteLinea> ProductesDomain = new List<CarritoProducteLinea>();
+
+        foreach (ProducteCompraRequest producte in Productes)
+        {
+            ProductesDomain.Add(producte.ToProducte());   
+        }
+        compraDomain.Lineas = ProductesDomain;
         
 
         return compraDomain;

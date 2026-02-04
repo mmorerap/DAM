@@ -1,3 +1,4 @@
+using dbdemo.Domain.Entities;
 using dbdemo.Endpoints;
 using dbdemo.Model;
 
@@ -6,16 +7,18 @@ namespace dbdemo.DTO;
 public record ProducteCompraRequest( Guid IdProducte, Decimal Quantitat) 
 {
 
-    // public CarritoCompras ToCarritoCompra(Guid id)   // Conversió a model
-    // {
+    public CarritoProducteLinea ToProducte() 
+    {
+        Producte producte = new Producte();
+        // producteC.Codi = IdProducte.ToString();
 
-    //     return new CarritoCompras
-    //     {
-    //         Id = id,
-    //         Nom = Nom,
-    //         Descripcio = Descripcio
-    //     };
-    // }
+        CarritoProducteLinea linea = new CarritoProducteLinea();
+        linea.quantitat = Quantitat;
+        
+        linea.producte = producte;
+        
+        return linea;
+    }
 }
 
 
