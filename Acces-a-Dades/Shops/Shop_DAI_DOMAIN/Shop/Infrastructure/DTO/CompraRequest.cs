@@ -4,7 +4,7 @@ using dbdemo.Model;
 
 namespace dbdemo.DTO;
 
-public record CompraRequest( Guid IdClient, DateOnly Data, List<ProducteCompraRequest>Productes /* List<ProducteCompraRequest>Productes*/) 
+public record CompraRequest( Guid Client, DateOnly Data, List<ProducteCompraRequest>Productes /* List<ProducteCompraRequest>Productes*/) 
 {
     // Guanyem CONTROL sobre com es fa la conversió
 
@@ -12,7 +12,7 @@ public record CompraRequest( Guid IdClient, DateOnly Data, List<ProducteCompraRe
     {
         
         Client client = new Client();
-        client.Codi = IdClient.ToString();
+        client.Codi = Client.ToString();
 
 
         Compra compraDomain = new Compra();

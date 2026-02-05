@@ -7,12 +7,6 @@ public class CarritoProducteLinea
     public Decimal quantitat { get; set; }
 
 
-    // public CarritoProducteLinea(Guid Id_carr, decimal price, Producte producte)
-    // {
-    //     ID_CARR=Id_carr;
-    //     producte = producte;
-    //     Price=price;
-
-    // }
+    
 
 }
