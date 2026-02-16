@@ -12,7 +12,7 @@ ATENCIÓ
 
     public Client client { get; set; } 
 
-    public DateOnly Data { get; set; } 
+    public DateTime Data { get; set; } 
     public List<CarritoProducteLinea> Lineas { get; set; }
 
 

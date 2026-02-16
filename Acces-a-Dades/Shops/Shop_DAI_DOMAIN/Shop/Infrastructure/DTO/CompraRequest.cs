@@ -4,7 +4,7 @@ using dbdemo.Model;
 
 namespace dbdemo.DTO;
 
-public record CompraRequest( Guid Client, DateOnly Data, List<ProducteCompraRequest>Productes /* List<ProducteCompraRequest>Productes*/) 
+public record CompraRequest( Guid Client, DateTime Data, List<ProducteCompraRequest>Productes /* List<ProducteCompraRequest>Productes*/) 
 {
     // Guanyem CONTROL sobre com es fa la conversió
 

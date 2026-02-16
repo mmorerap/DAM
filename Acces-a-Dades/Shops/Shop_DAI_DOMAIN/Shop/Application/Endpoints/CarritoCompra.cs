@@ -6,6 +6,8 @@ using dbdemo.Validators;
 using dbdemo.Common;
 using dbdemo.Factory;
 using dbdemo.Domain.Entities;
+using dbdemo.Infraestructure.Persistence.Entitites;
+using dbdemo.Infraestructure.Mappers;
 namespace dbdemo.Endpoints;
 
 public static class EndpointsCarritoCompras
@@ -92,18 +94,27 @@ public static class EndpointsCarritoCompras
         {
 
             Compra compra = req.ToCompra();
-            // Result result = CompraValidator.Validate(compra);
-            //  if (!result.IsOk)
-            // {
-            //     return Results.BadRequest(new 
-            //     {
-            //         error = result.ErrorCode,
-            //         message = result.ErrorMessage
-            //     });
-            // }
+            Result result = CompraValidator.Validate(compra);
+             if (!result.IsOk)
+            {
+                return Results.BadRequest(new 
+                {
+                    error = result.ErrorCode,
+                    message = result.ErrorMessage
+                });
+            }
+            Guid id;
+            id = Guid.NewGuid();
 
-            // CarritoComprasADO.Insert(dbConn, compra);
+            CompraEntity CompraEntity = CompraMapper.ToEntity(id,"",compra);                     //,preu (s'ha de pasar el preu que agafi en la paticio a l'ado)
 
+            // falta crear el mapper de la taula de carrito produtce, per acoseguir el preu he de fer una consulta a l'ado el cual em doni el preu i el paso per parametre al mapper
+
+            //compraADO.GetPreu(se li ha de pasar algo per identificar)
+
+            // CarritoComprasADO.Insert(compraEntity);
+
+            //return Results.Ok(CompraEntity);
             return Results.Ok(compra);
         });
 
