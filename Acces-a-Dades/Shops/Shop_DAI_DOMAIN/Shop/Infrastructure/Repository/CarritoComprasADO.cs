@@ -9,12 +9,10 @@ namespace dbdemo.Repository;
 
 class CarritoComprasADO
 {
-   
 
 
 
-
- public static PreuProducte? GetPriceById(DatabaseConnection dbConn, Guid id)
+    public static PreuProducte? GetPriceById(DatabaseConnection dbConn, Guid id)
     {
         dbConn.Open();
         string sql = "SELECT Price FROM RegistrePreus WHERE Id_Prod = @Id";
@@ -30,7 +28,7 @@ class CarritoComprasADO
             preuProducte = new PreuProducte
             {
                 Price = reader.GetDecimal(0),
-                
+
             };
         }
 
@@ -38,7 +36,47 @@ class CarritoComprasADO
     }
 
 
+    public static void InsertCompraEntity(DatabaseConnection dbConn, CompraEntity compraEntity)
+    {
 
+        dbConn.Open();
+
+        string sql = @"INSERT INTO CarritoCompras (Id, Nom, Descripcio, ID_CLI, DataCompra)     
+                            VALUES (@Id, @Nom, @Descripcio, @ID_CLI, @DataCompra )";
+
+        using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
+        cmd.Parameters.AddWithValue("@Id", compraEntity.Id);
+        cmd.Parameters.AddWithValue("@Nom", compraEntity.Nom);
+        cmd.Parameters.AddWithValue("@Descripcio", compraEntity.Descripcio);
+        cmd.Parameters.AddWithValue("@ID_CLI", compraEntity.ID_CLI);
+        cmd.Parameters.AddWithValue("@DataCompra", compraEntity.DataCompra);
+
+
+        cmd.ExecuteNonQuery();
+
+        dbConn.Close();
+    }
+
+    public static void InsertProducteCompraEntity(DatabaseConnection dbConn, ProducteCompraEntity producteCompraEntity)
+    {
+
+        dbConn.Open();
+
+        string sql = @"INSERT INTO CarritoProducte (Id, ID_CARR, ID_PROD, Quantitat, Price)     
+                            VALUES (@Id, @ID_CARR, @ID_PROD, @Quantitat, @Price )";
+
+        using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
+        cmd.Parameters.AddWithValue("@Id", producteCompraEntity.Id);
+        cmd.Parameters.AddWithValue("@ID_CARR", producteCompraEntity.ID_CARR);
+        cmd.Parameters.AddWithValue("@ID_PROD", producteCompraEntity.ID_PROD);
+        cmd.Parameters.AddWithValue("@Quantitat", producteCompraEntity.Quantitat);
+        cmd.Parameters.AddWithValue("@Price", producteCompraEntity.Price);
+
+
+        cmd.ExecuteNonQuery();
+
+        dbConn.Close();
+    }
 
 
 
@@ -51,15 +89,15 @@ class CarritoComprasADO
         dbConn.Open();
 
         string sql = @"INSERT INTO CarritoCompras (Id, Nom, Descripcio)     
-                        VALUES (@Id, @Nom, @Descripcio)";            
+                        VALUES (@Id, @Nom, @Descripcio)";
 
         using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
         cmd.Parameters.AddWithValue("@Id", carritoCompras.Id);
         cmd.Parameters.AddWithValue("@Nom", carritoCompras.Nom);
         cmd.Parameters.AddWithValue("@Descripcio", carritoCompras.Descripcio);
-        
+
         cmd.ExecuteNonQuery();
-        
+
         dbConn.Close();
     }
 
@@ -112,7 +150,7 @@ class CarritoComprasADO
         return carritoCompras;
     }
 
-     public static void Update(DatabaseConnection dbConn, CarritoCompras carritoCompras)
+    public static void Update(DatabaseConnection dbConn, CarritoCompras carritoCompras)
     {
         dbConn.Open();
 
@@ -122,7 +160,7 @@ class CarritoComprasADO
                         Nom = @Nom,
                         Descripcio = @Descripcio
                         WHERE Id = @Id";
-                       
+
 
 
         using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
