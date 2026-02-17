@@ -2,6 +2,7 @@ using Microsoft.Data.SqlClient;
 using static System.Console;
 using dbdemo.Services;
 using dbdemo.Model;
+using dbdemo.Infraestructure.Persistence.Entitites;
 
 
 namespace dbdemo.Repository;
@@ -13,20 +14,28 @@ class CarritoComprasADO
 
 
 
+ public static PreuProducte? GetPriceById(DatabaseConnection dbConn, Guid id)
+    {
+        dbConn.Open();
+        string sql = "SELECT Price FROM RegistrePreus WHERE Id_Prod = @Id";
 
+        using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
+        cmd.Parameters.AddWithValue("@Id", id);
 
+        using SqlDataReader reader = cmd.ExecuteReader();
+        PreuProducte? preuProducte = null;
 
+        if (reader.Read())
+        {
+            preuProducte = new PreuProducte
+            {
+                Price = reader.GetDecimal(0),
+                
+            };
+        }
 
-
-
-
-
-
-
-
-
-
-
+        return preuProducte;
+    }
 
 
 

@@ -8,6 +8,7 @@ using dbdemo.Factory;
 using dbdemo.Domain.Entities;
 using dbdemo.Infraestructure.Persistence.Entitites;
 using dbdemo.Infraestructure.Mappers;
+using System.Threading.Tasks.Dataflow;
 namespace dbdemo.Endpoints;
 
 public static class EndpointsCarritoCompras
@@ -21,9 +22,9 @@ public static class EndpointsCarritoCompras
             List<CarritoCompraResponse> CarritoComprasResponses = new List<CarritoCompraResponse>();
             foreach (CarritoCompras carritoCompras in CarritoCompras)
             {
-                CarritoComprasResponses.Add(CarritoCompraResponse.FromCarritoCompras(carritoCompras));   
+                CarritoComprasResponses.Add(CarritoCompraResponse.FromCarritoCompras(carritoCompras));
             }
-            return Results.Ok(CarritoCompras);
+            return Results.Ok(CarritoComprasResponses);
         });
 
         // GET CarritoCompra by id
@@ -40,7 +41,7 @@ public static class EndpointsCarritoCompras
 
 
 
-      
+
         app.MapGet("/carritoCompra/{id}/import", (Guid id, string TipoDescompte = "Normal") =>
         {
             List<ImportAndCo> importAndCo = CarritoComprasADO.GetImportById(dbConn, id);
@@ -63,9 +64,9 @@ public static class EndpointsCarritoCompras
             IDescompteTipe descompte = factory.CreateDescompte();
             Decimal import = CalculsCarro.Calcular(importAndCo);
             Decimal dte = descompte.CalcularDescompte(import);
-            
 
-            return Results.Ok(new {dte,import,importAndCo});
+
+            return Results.Ok(new { dte, import, importAndCo });
         });
 
 
@@ -95,27 +96,42 @@ public static class EndpointsCarritoCompras
 
             Compra compra = req.ToCompra();
             Result result = CompraValidator.Validate(compra);
-             if (!result.IsOk)
+
+            if (!result.IsOk)
             {
-                return Results.BadRequest(new 
+                return Results.BadRequest(new
                 {
                     error = result.ErrorCode,
                     message = result.ErrorMessage
                 });
             }
-            Guid id;
-            id = Guid.NewGuid();
+            Guid id_Carr;
+            id_Carr = Guid.NewGuid();
 
-            CompraEntity CompraEntity = CompraMapper.ToEntity(id,"",compra);                     //,preu (s'ha de pasar el preu que agafi en la paticio a l'ado)
+            CompraEntity CompraEntity = CompraMapper.ToEntity(id_Carr, "", compra);
 
-            // falta crear el mapper de la taula de carrito produtce, per acoseguir el preu he de fer una consulta a l'ado el cual em doni el preu i el paso per parametre al mapper
+            List<ProducteCompraEntity> lineasEntity = new();
+            PreuProducte preuProducte ;
+            Guid idProducte;
 
-            //compraADO.GetPreu(se li ha de pasar algo per identificar)
+            foreach (var linea in compra.Lineas)
+            {
+                idProducte = Guid.Parse(linea.producte.Codi);
+                preuProducte = CarritoComprasADO.GetPriceById(dbConn, idProducte)!;
+
+                ProducteCompraEntity producteCompraEntity = ProducteCompraMapper.ToEntity(Guid.NewGuid(), id_Carr, idProducte, preuProducte.Price, linea.quantitat);
+
+                lineasEntity.Add(producteCompraEntity);
+            }
+
 
             // CarritoComprasADO.Insert(compraEntity);
 
             //return Results.Ok(CompraEntity);
-            return Results.Ok(compra);
+            //return Results.Ok(compra.Lineas);
+            return Results.Ok(lineasEntity);
+            // return Results.Ok(compra);
+
         });
 
 
@@ -141,7 +157,7 @@ public static class EndpointsCarritoCompras
 
 
 
-        
+
         // // UPDATE /carritoCompra/{id}
         // app.MapPut("/carritoCompra/{id}", (Guid id, CarritoCompraRequest req) =>
         // {
