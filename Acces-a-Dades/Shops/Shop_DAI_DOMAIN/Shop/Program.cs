@@ -7,15 +7,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-// Configuració
 builder.Configuration
     .SetBasePath(AppContext.BaseDirectory)
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
-// AFEGIT: Registrar JwtTokenService al contenidor de dependències
 builder.Services.AddScoped<JswTokenService>();
 
-// AFEGIT: Configuració JWT
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -36,7 +33,6 @@ builder.Services
         };
     });
 
-// AFEGIT: Autorització
 builder.Services.AddAuthorization();
 
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
@@ -45,7 +41,6 @@ DatabaseConnection dbConn = new DatabaseConnection(connectionString);
 WebApplication webApp = builder.Build();
 
 webApp.UseRouting();
-
 webApp.UseAuthentication();
 webApp.UseAuthorization();
 
@@ -54,8 +49,7 @@ webApp.MapFamiliaEndpoints(dbConn);
 webApp.MapCarritoComprasEndpoints(dbConn);
 webApp.MapCarritoProducteEndpoints(dbConn);
 
-webApp.MapUserEndpointsJWT();
-
-
+// ✅ Ya no pasamos jwtService como parámetro
+webApp.MapUserEndpointsJWT(dbConn);
 
 webApp.Run();
