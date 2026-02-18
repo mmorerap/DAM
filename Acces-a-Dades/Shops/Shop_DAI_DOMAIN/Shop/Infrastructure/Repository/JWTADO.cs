@@ -1,5 +1,4 @@
 using Microsoft.Data.SqlClient;
-using static System.Console;
 using dbdemo.Services;
 using dbdemo.Model;
 using dbdemo.DTO;
@@ -22,19 +21,28 @@ class JWTADO
         cmd.Parameters.AddWithValue("@dni", dni);
 
         using SqlDataReader reader = cmd.ExecuteReader();
-        ClientResponseJWT? client = null;
 
-        if (reader.Read())
+        ClientResponseJWT? client = null;
+        List<string> roles = new List<string>();
+
+        while (reader.Read())
         {
-            client = ClientResponseJWT.FromClient(
-                reader.GetGuid(0),
-                reader.GetString(1),
-                reader.GetString(2),
-                reader.IsDBNull(3) ? "user" : reader.GetString(3)
-            );
+            if (client == null)
+            {
+                client = ClientResponseJWT.FromClient(
+                    reader.GetGuid(0),
+                    reader.GetString(1),
+                    reader.GetString(2),
+                    roles
+                );
+            }
+
+            if (!reader.IsDBNull(3))
+                roles.Add(reader.GetString(3));
         }
 
         dbConn.Close();
+
         return client;
     }
 }

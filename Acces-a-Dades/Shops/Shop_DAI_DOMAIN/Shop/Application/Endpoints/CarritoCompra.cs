@@ -20,22 +20,25 @@ public static class EndpointsCarritoCompras
         app.MapGet("/carritoCompras", (ClaimsPrincipal user) =>
         {
             if (!user.Identity?.IsAuthenticated ?? true)
-                    return Results.Unauthorized();
+                return Results.Unauthorized();
 
-                bool isAdmin = user.Claims.Any(c =>
-                    c.Type == ClaimTypes.Role && c.Value == "admin");
+            bool isAdmin = user.IsInRole("admin");
 
-                if (!isAdmin)
-                    return Results.Forbid();
+            if (!isAdmin)
+                return Results.Forbid();
 
-            List<CarritoCompras> CarritoCompras = CarritoComprasADO.GetAll(dbConn);
-            List<CarritoCompraResponse> CarritoComprasResponses = new List<CarritoCompraResponse>();
-            foreach (CarritoCompras carritoCompras in CarritoCompras)
+            List<CarritoCompras> carritos = CarritoComprasADO.GetAll(dbConn);
+
+            List<CarritoCompraResponse> responses = new();
+
+            foreach (CarritoCompras carrito in carritos)
             {
-                CarritoComprasResponses.Add(CarritoCompraResponse.FromCarritoCompras(carritoCompras));
+                responses.Add(CarritoCompraResponse.FromCarritoCompras(carrito));
             }
-            return Results.Ok(CarritoComprasResponses);
+
+            return Results.Ok(responses);
         });
+
 
         // GET CarritoCompra by id
         app.MapGet("/carritoCompra/{id}", (Guid id) =>
