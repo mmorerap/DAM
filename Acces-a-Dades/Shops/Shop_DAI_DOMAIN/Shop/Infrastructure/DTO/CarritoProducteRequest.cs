@@ -15,6 +15,7 @@ public record CarritoProducteRequest( Guid ID_CARR, Guid ID_PROD, int Quantitat)
             ID_CARR = ID_CARR,
             ID_PROD = ID_PROD,
             Quantitat = Quantitat
+            
         };
     }
 }

@@ -9,3 +9,4 @@ public class CompraEntity
     public required DateTime DataCompra { get; set; }
 
 }
+

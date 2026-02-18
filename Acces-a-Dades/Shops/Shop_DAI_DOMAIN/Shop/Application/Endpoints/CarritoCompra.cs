@@ -9,6 +9,7 @@ using dbdemo.Domain.Entities;
 using dbdemo.Infraestructure.Persistence.Entitites;
 using dbdemo.Infraestructure.Mappers;
 using System.Threading.Tasks.Dataflow;
+using System.Security.Claims;
 namespace dbdemo.Endpoints;
 
 public static class EndpointsCarritoCompras
@@ -16,8 +17,17 @@ public static class EndpointsCarritoCompras
     public static void MapCarritoComprasEndpoints(this WebApplication app, DatabaseConnection dbConn)
     {
         // GET /CarritoCompras
-        app.MapGet("/carritoCompras", () =>
+        app.MapGet("/carritoCompras", (ClaimsPrincipal user) =>
         {
+            if (!user.Identity?.IsAuthenticated ?? true)
+                    return Results.Unauthorized();
+
+                bool isAdmin = user.Claims.Any(c =>
+                    c.Type == ClaimTypes.Role && c.Value == "admin");
+
+                if (!isAdmin)
+                    return Results.Forbid();
+
             List<CarritoCompras> CarritoCompras = CarritoComprasADO.GetAll(dbConn);
             List<CarritoCompraResponse> CarritoComprasResponses = new List<CarritoCompraResponse>();
             foreach (CarritoCompras carritoCompras in CarritoCompras)
@@ -74,12 +84,6 @@ public static class EndpointsCarritoCompras
 
 
 
-
-
-
-
-
-
         // POST /carritoCompra SENSE BASE
         /*
             {
@@ -114,7 +118,7 @@ public static class EndpointsCarritoCompras
 
 
             List<ProducteCompraEntity> lineasEntity = new();
-            PreuProducte preuProducte ;
+            PreuProducte preuProducte;
             Guid idProducte;
 
             foreach (var linea in compra.Lineas)
@@ -130,17 +134,11 @@ public static class EndpointsCarritoCompras
             foreach (var lEntity in lineasEntity)
             {
 
-            CarritoComprasADO.InsertProducteCompraEntity(dbConn, lEntity);
+                CarritoComprasADO.InsertProducteCompraEntity(dbConn, lEntity);
 
             }
 
-
-            // CarritoComprasADO.Insert(compraEntity);
-
-            //return Results.Ok(CompraEntity);
-            //return Results.Ok(compra.Lineas);
-            //return Results.Ok(lineasEntity);
-             return Results.Ok(compra);
+            return Results.Ok(compra);
 
         });
 
@@ -155,7 +153,7 @@ public static class EndpointsCarritoCompras
             Result result = CarritoComprasValidator.Validate(req);
             if (!result.IsOk)
             {
-                return Results.BadRequest(new 
+                return Results.BadRequest(new
                 {
                     error = result.ErrorCode,
                     message = result.ErrorMessage
