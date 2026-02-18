@@ -4,16 +4,20 @@ using dbdemo.Services;
 using dbdemo.Model;
 using dbdemo.DTO;
 
-
 namespace dbdemo.Repository;
 
-public class JWTADO
+class JWTADO
 {
     public static ClientResponseJWT? GetByDNI(DatabaseConnection dbConn, string dni)
     {
         dbConn.Open();
 
-        string sql = "SELECT ID, Nom, DNI FROM b1botiga.dbo.Client WHERE DNI = @dni";
+        string sql = @"SELECT c.ID, c.Nom, c.DNI, r.Code
+                       FROM b1botiga.dbo.Client c
+                       LEFT JOIN b1botiga.dbo.ClientRoles cr ON c.ID = cr.Client_ID
+                       LEFT JOIN b1botiga.dbo.Roles r ON cr.Role_ID = r.ID
+                       WHERE c.DNI = @dni";
+
         using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
         cmd.Parameters.AddWithValue("@dni", dni);
 
@@ -22,12 +26,11 @@ public class JWTADO
 
         if (reader.Read())
         {
-            // Por ahora Role fijo igual que tu ejemplo
             client = ClientResponseJWT.FromClient(
                 reader.GetGuid(0),
                 reader.GetString(1),
                 reader.GetString(2),
-                "admin"
+                reader.IsDBNull(3) ? "user" : reader.GetString(3)
             );
         }
 
