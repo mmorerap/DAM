@@ -10,7 +10,7 @@ public static class CarritoComprasValidator
     public static Result Validate(CarritoCompraRequest carritoCompra)
     {
 
-        if (carritoCompra.Nom.Length > 10)
+        if (carritoCompra.Nom.Length > 100)
         {
             return Result.Failure("Longitud de Nom excedida", "Nom");
         }

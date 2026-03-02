@@ -63,7 +63,7 @@ public static class EndpointsCarritoCompras
             
 
             return Results.Ok(new {dte,import,importAndCo});
-        });
+        }); // Fa falta modificar la BDD , ha parat de funcionar amb el domain ja que demana camps inexistents de una taula 
 
 
 

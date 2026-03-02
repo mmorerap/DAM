@@ -7,7 +7,7 @@ using dbdemo.Model;
 namespace dbdemo.Repository;
 
 class CarritoProducteADO
-{
+{ // No funciona desde la modificacio de la BDD
    
 
     public static void Insert(DatabaseConnection dbConn, CarritoProducte carritoProducte)
